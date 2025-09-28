@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@api/client';
 import { Breed, BreedRequest } from '../types';
 
 export const getBreedById = async (id: number): Promise<Breed> => {

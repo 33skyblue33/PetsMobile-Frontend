@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import Constants from 'expo-constants';
-import { getAccessToken, setAccessToken, clearAccessToken } from './token';
+import { getAccessToken, setAccessToken, clearAccessToken } from '@api/token';
 import { AuthResult } from '../types';
 
 const API_URL = Constants.expoConfig?.extra?.apiUrl || 'http://localhost:5000/api/v3';

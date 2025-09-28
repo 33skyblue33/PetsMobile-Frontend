@@ -1,4 +1,4 @@
-import apiClient from './client';
+import apiClient from '@api/client';
 import { Pet, PetRequest } from '../types';
 
 export const getPetById = async (id: number): Promise<Pet> => {
