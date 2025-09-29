@@ -1,42 +1,36 @@
 import 'package:flutter/material.dart';
-import '../api/models/pet.dart'; 
+import '../api/models/pet.dart';
 
 class PetCard extends StatelessWidget {
   final Pet pet;
-  final VoidCallback? onTap; // A callback function to handle taps
+  final VoidCallback? onTap;
 
   const PetCard({
     Key? key,
     required this.pet,
-    this.onTap, // Make the onTap optional
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      // This clips the child widgets (like the image) to the card's rounded corners.
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
       elevation: 5,
-      // Add margin to create space between cards in a list
       margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: InkWell(
-        onTap: onTap, // Execute the callback when the card is tapped
+        onTap: onTap,
         child: Column(
-          // Ensures children are aligned to the start (left) and stretch to fill width
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            // --- IMAGE SECTION ---
             Image.network(
               pet.imageUrl,
-              height: 200, // Fixed height for a consistent look in a list
-              fit: BoxFit.cover, // Ensures the image covers the space without distortion
-              
-              // Show a loading spinner while the image is loading
+              height: 200,
+              fit: BoxFit.cover,
               loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                if (loadingProgress == null) return child; // Image is loaded, show it
+                if (loadingProgress == null) return child;
                 return Container(
                   height: 200,
                   child: Center(
@@ -48,22 +42,18 @@ class PetCard extends StatelessWidget {
                   ),
                 );
               },
-              
-              // Show a placeholder icon if the image fails to load
               errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                 return Container(
                   height: 200,
                   color: Colors.grey[200],
                   child: Icon(
-                    Icons.pets, // Or Icons.broken_image
+                    Icons.pets,
                     color: Colors.grey[400],
                     size: 48,
                   ),
                 );
               },
             ),
-
-            // --- TEXT SECTION ---
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -77,7 +67,6 @@ class PetCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    // Example of displaying more info in a subtitle
                     '${pet.breedName} • ${pet.age} years old',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: Colors.black54,

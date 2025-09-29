@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:pets_mobile/api/models/pet.dart';   
+import 'package:pets_mobile/api/models/pet.dart';
 import 'package:pets_mobile/api/petService.dart';
-import 'package:pets_mobile/widgets/PetCard.dart';    
+import 'package:pets_mobile/widgets/PetCard.dart';
+import 'package:pets_mobile/widgets/PetDetails.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const App());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class App extends StatelessWidget {
+  const App({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         title: Text(widget.title),
       ),
       body: FutureBuilder<List<Pet>>(
-        future: _futurePets, 
+        future: _futurePets,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -63,6 +64,7 @@ class _HomePageState extends State<HomePage> {
           else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
+          
           else if (snapshot.hasData) {
             final pets = snapshot.data!;
             return RefreshIndicator(
@@ -74,13 +76,23 @@ class _HomePageState extends State<HomePage> {
                   return PetCard(
                     pet: pet,
                     onTap: () {
-                      print('Tapped on ${pet.name}');
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                        ),
+                        builder: (BuildContext context) {
+                          return PetDetails(pet: pet);
+                        },
+                      );
                     },
                   );
                 },
               ),
             );
           }
+          
           else {
             return const Center(child: Text('No pets found.'));
           }

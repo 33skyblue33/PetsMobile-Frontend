@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 Future<List<Pet>> fetchPets() async {
-  final response = await http.get(Uri.parse('http://10.250.230.140:5215/api/v3/Pets'));
+  final response = await http.get(Uri.parse('http://192.168.1.209:5215/api/v3/Pets'));
 
   if (response.statusCode == 200) {
     final List<dynamic> jsonList = jsonDecode(response.body);
