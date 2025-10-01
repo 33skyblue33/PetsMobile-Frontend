@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:pets_mobile/api/authService.dart';
 import 'package:pets_mobile/api/models/pet.dart';
 import 'package:pets_mobile/api/petService.dart';
 import 'package:pets_mobile/widgets/PetCard.dart';
 import 'package:pets_mobile/widgets/PetDetails.dart';
+import 'package:pets_mobile/widgets/AddPetPage.dart';
+import 'package:pets_mobile/widgets/AppDrawer.dart';
 
 void main() {
-  runApp(const App());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => AuthService(),
+      child: const App(),
+    ),
+  );
 }
 
 class App extends StatelessWidget {
@@ -19,7 +28,14 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const HomePage(title: 'Pets Mobile'),
+      home: Consumer<AuthService>(
+        builder: (context, auth, _) {
+          if (auth.isLoading) {
+            return const Scaffold(body: Center(child: CircularProgressIndicator()));
+          }
+          return const HomePage(title: 'Pets Mobile');
+        },
+      ),
     );
   }
 }
@@ -47,25 +63,34 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _navigateToAddPetPage(String token) async {
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(builder: (context) => AddPetPage(token: token)),
+    );
+    if (result == true) {
+      _refreshPets();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+      drawer: const AppDrawer(),
       body: FutureBuilder<List<Pet>>(
         future: _futurePets,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
-          }
-
-          else if (snapshot.hasError) {
+          } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
-          }
-          
-          else if (snapshot.hasData) {
+          } else if (snapshot.hasData) {
             final pets = snapshot.data!;
             return RefreshIndicator(
               onRefresh: _refreshPets,
@@ -76,14 +101,21 @@ class _HomePageState extends State<HomePage> {
                   return PetCard(
                     pet: pet,
                     onTap: () {
+                      if (!authService.isLoggedIn) {
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please log in to view details.')));
+                        return;
+                      }
                       showModalBottomSheet(
                         context: context,
                         isScrollControlled: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                        ),
+                        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
                         builder: (BuildContext context) {
-                          return PetDetails(pet: pet);
+                          return PetDetails(
+                            pet: pet,
+                            user: authService.user,
+                            token: authService.accessToken!,
+                            onDataChanged: _refreshPets, 
+                          );
                         },
                       );
                     },
@@ -91,13 +123,18 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             );
-          }
-          
-          else {
+          } else {
             return const Center(child: Text('No pets found.'));
           }
         },
       ),
+      floatingActionButton: authService.user?.role == 'Employee'
+          ? FloatingActionButton.extended(
+              onPressed: () => _navigateToAddPetPage(authService.accessToken!),
+              icon: const Icon(Icons.add),
+              label: const Text('Add Pet'),
+            )
+          : null,
     );
   }
 }
