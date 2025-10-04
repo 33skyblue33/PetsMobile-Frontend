@@ -24,21 +24,16 @@ class AuthService with ChangeNotifier {
   }
 
   Future<void> tryAutoLogin() async {
-    final storedAccessToken = await _storage.read(key: 'accessToken');
-    final storedUser = await _storage.read(key: 'user');
     _refreshTokenCookie = await _storage.read(key: 'refreshTokenCookie');
 
-    if (storedAccessToken != null && storedUser != null) {
-      _accessToken = storedAccessToken;
-      _user = User.fromJson(jsonDecode(storedUser), _accessToken!);
-    } else if (_refreshTokenCookie != null) {
+    if (_refreshTokenCookie != null) {
       await refresh();
     }
 
     _isLoading = false;
     notifyListeners();
   }
-
+  
   Future<void> login(String email, String password) async {
     final response = await http.post(
       Uri.parse('$_baseUrl/Auth/login'),
@@ -50,7 +45,6 @@ class AuthService with ChangeNotifier {
       final responseData = jsonDecode(response.body);
       _accessToken = responseData['accessToken'];
       _user = User.fromJson(responseData['user'], _accessToken!);
-
       await _handleSetCookie(response.headers);
       await _persistAuthData();
       notifyListeners();
@@ -79,7 +73,6 @@ class AuthService with ChangeNotifier {
 
   Future<void> refresh() async {
     if (_refreshTokenCookie == null) return;
-
     final response = await http.put(
       Uri.parse('$_baseUrl/Auth/refresh'),
       headers: {'Cookie': _refreshTokenCookie!},
@@ -105,7 +98,7 @@ class AuthService with ChangeNotifier {
           headers: {'Cookie': _refreshTokenCookie!},
         );
       } catch (e) {
-        print("Logout failed but proceeding to clear local data: $e");
+        
       }
     }
     _user = null;

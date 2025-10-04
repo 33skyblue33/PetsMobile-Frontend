@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pets_mobile/api/authService.dart';
+import 'package:pets_mobile/api/breedProvider.dart';
 import 'package:pets_mobile/api/models/pet.dart';
 import 'package:pets_mobile/api/petService.dart';
 import 'package:pets_mobile/widgets/PetCard.dart';
@@ -10,8 +11,11 @@ import 'package:pets_mobile/widgets/AppDrawer.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => AuthService(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => BreedProvider()),
+      ],
       child: const App(),
     ),
   );
@@ -114,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                             pet: pet,
                             user: authService.user,
                             token: authService.accessToken!,
-                            onDataChanged: _refreshPets, 
+                            onDataChanged: _refreshPets,
                           );
                         },
                       );
