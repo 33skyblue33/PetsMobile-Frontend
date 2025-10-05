@@ -124,94 +124,22 @@ This section provides structural wireframes using Mermaid diagrams to visualize 
 
 ### 1. Home Page
 
-```mermaid
-graph TD
-    subgraph "Home Page"
-        A[Scaffold] --> B[AppBar: Pets Mobile]
-        A --> C(ListView)
-        A --> D{[FloatingActionButton<br>Add Pet<br>(Conditional)]}
 
-        subgraph "PetCard (Clickable)"
-            direction TB
-            E((Image))
-            F[Text: Name]
-            G[Text: Breed • Age]
-        end
-        
-        C --> P1(PetCard 1)
-        C --> P2(PetCard 2)
-        P1 --> E
-        P1 --> F
-        P1 --> G
-    end
-```
 **Description:** A screen with an `AppBar` and a scrollable `ListView` of `PetCard` widgets. The `FloatingActionButton` for adding a pet is only visible to "Employee" users.
 
 ### 2. Pet Details Modal
 
-```mermaid
-graph TD
-    subgraph "Pet Details Modal"
-        A[ModalBottomSheet] --> B[Column]
-        B --> C((Pet Image))
-        B --> D[Text: Pet Name]
-        B --> E[Text: Breed Name]
-        B --> F[Row: Info Chips]
-        F --> G1([Chip: Age])
-        F --> G2([Chip: Color])
-        B --> H[Divider]
-        B --> I[Text: About]
-        B --> J[Text: Description]
-        B --> K[Employee Actions (Conditional)]
-        
-        subgraph "Actions"
-            K --> L([Button: Edit])
-            K --> M([Button: Remove])
-        end
-    end
-```
+
 **Description:** A modal sheet that slides up, showing pet details. The "Edit" and "Remove" action buttons are only visible to "Employee" users.
 
 ### 3. Add / Edit Pet Page
 
-```mermaid
-graph TD
-    subgraph "Add/Edit Pet Page"
-        A[Scaffold] --> B[AppBar: Add/Edit Pet]
-        A --> C[Form]
-        C --> D[Column]
-        D --> E((Image Picker Container))
-        D --> F[TextField: Name]
-        D --> G[TextField: Color]
-        D --> H[TextField: Age]
-        D --> I[TextField: Description]
-        D --> J[Dropdown: Breed]
-        D --> K([Button: Add Pet / Save Changes])
-    end
-```
+
 **Description:** A full-screen form. The `Image Picker Container` allows selecting an image from the gallery. The "Breed" field is a dropdown populated from the API.
 
 ### 4. App Drawer (Menu)
 
-```mermaid
-graph TD
-    subgraph "App Drawer"
-        A[Drawer] --> B[AppBar: Menu]
-        A --> C{Logged In?}
-        
-        subgraph "Logged Out State"
-            C -- No --> D([ListTile: Login])
-            C -- No --> E([ListTile: Register])
-        end
 
-        subgraph "Logged In State"
-            C -- Yes --> F([ListTile: Logout])
-        end
-
-        A --> G[Divider]
-        A --> H[SwitchListTile: Dark Mode]
-    end
-```
 **Description:** A side menu with authentication options that change based on the user's login state, and a persistent toggle for light/dark mode
 
 ## Setup & Running the Application
