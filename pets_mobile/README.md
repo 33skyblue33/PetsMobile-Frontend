@@ -41,15 +41,21 @@ This diagram shows the system in its environment with users and external systems
 ```mermaid
 graph TD
     subgraph "Pets Mobile Ecosystem"
-        user("User\n[Person]")
-        employee("Employee\n[Person]")
-        system("Pets Mobile App\n[Flutter Mobile Application]")
-        backend("Backend API\n[ASP.NET Core Web API]")
+        user("User
+        [Person]")
+        employee("Employee
+        [Person]")
+        system("Pets Mobile App
+        [Flutter Mobile Application]")
+        backend("Backend API
+        [ASP.NET Core Web API]")
     end
 
-    user -- "Views pets, logs in,\nregisters" --> system
+    user -- "Views pets, logs in,
+    registers" --> system
     employee -- "Manages pet listings (CRUD)" --> system
-    system -- "Makes API calls over HTTPS\n[JSON]" --> backend
+    system -- "Makes API calls over HTTPS
+    [JSON]" --> backend
 ```
 
 ### Level 2: Container Diagram
@@ -59,14 +65,18 @@ This diagram zooms into the backend to show its major building blocks or "contai
 ```mermaid
 graph TD
     subgraph "Backend API"
-        webApi("Web API\n[ASP.NET Core Container]")
-        database("Database\n[SQL Server]")
+        webApi("Web API
+        [ASP.NET Core Container]")
+        database("Database
+        [SQL Server]")
     end
     
-    flutterApp("Flutter Mobile App\n[External System]")
+    flutterApp("Flutter Mobile App
+    [External System]")
 
     flutterApp -- "HTTPS API Requests" --> webApi
-    webApi -- "Reads/Writes Data\n[Entity Framework Core]" --> database
+    webApi -- "Reads/Writes Data
+    [Entity Framework Core]" --> database
 ```
 
 ### Level 3: Component Diagram (Flutter App)
@@ -78,15 +88,19 @@ graph TD
     subgraph "Flutter Mobile App"
         direction LR
         subgraph "UI Layer"
-            widgets("Widgets\n(Pages, Cards, Forms)")
+            widgets("Widgets
+            (Pages, Cards, Forms)")
         end
         
         subgraph "State Management"
-            providers("Providers\n(AuthService, BreedProvider,\nThemeProvider)")
+            providers("Providers
+            (AuthService, BreedProvider,
+            ThemeProvider)")
         end
 
         subgraph "Data Layer"
-            services("API Services\n(petService, etc.)")
+            services("API Services
+            (petService, etc.)")
         end
     end
 
@@ -100,47 +114,107 @@ graph TD
 
 ## UI Wireframes
 
-This section describes the layout and key elements of each screen in the application.
+This section provides structural wireframes using Mermaid diagrams to visualize the layout and widget hierarchy of each screen.
+
+**Legend:**
+-   **`[Rectangle]`**: Standard container or widget.
+-   **`(Rounded)`**: Interactive list or card.
+-   **`([Stadium])`**: Button or clickable action.
+-   **`((Circle))`**: Image or avatar.
 
 ### 1. Home Page
--   **Layout:** A standard `Scaffold` with an `AppBar` and a body.
--   **AppBar:** Contains the application title ("Pets Mobile") and a hamburger icon to open the `AppDrawer`.
--   **Body:** A `ListView` that displays a vertically scrollable list of `PetCard` widgets. The entire list is wrapped in a `RefreshIndicator` for pull-to-refresh functionality.
--   **Floating Action Button:** An extended FAB with an "Add Pet" label and icon is visible in the bottom-right corner **only if** the logged-in user has the "Employee" role.
+
+```mermaid
+graph TD
+    subgraph "Home Page"
+        A[Scaffold] --> B[AppBar: "Pets Mobile"]
+        A --> C(ListView)
+        A --> D{[FloatingActionButton
+        "Add Pet"
+        (Conditional)]}
+
+        subgraph "PetCard (Clickable)"
+            direction TB
+            E((Image))
+            F[Text: Name]
+            G[Text: "Breed • Age"]
+        end
+        
+        C --> P1(PetCard 1)
+        C --> P2(PetCard 2)
+        P1 --> E
+        P1 --> F
+        P1 --> G
+    end
+```
+**Description:** A screen with an `AppBar` and a scrollable `ListView` of `PetCard` widgets. The `FloatingActionButton` for adding a pet is only visible to "Employee" users.
 
 ### 2. Pet Details Modal
--   **Layout:** A modal bottom sheet that slides up from the bottom.
--   **Header:** A large image of the pet occupies the top portion.
--   **Content:** Below the image, there is a padded column containing:
-    -   Pet's Name (Large, bold text).
-    -   Breed Name (Slightly smaller, secondary text).
-    -   Info Chips (e.g., "5 years old", "Golden") arranged horizontally.
-    -   A divider.
-    -   "About" and "Breed Details" sections with descriptive text.
--   **Action Buttons (Conditional):** If the user is an "Employee", a row of two buttons ("Edit" and "Remove") appears at the bottom.
 
-### 3. Add/Edit Pet Page
--   **Layout:** A full-screen `Scaffold` with a back arrow in the `AppBar`.
--   **AppBar:** Title is "Add a New Pet" or "Edit [Pet Name]".
--   **Body:** A scrollable `Form` containing:
-    -   An image container at the top that shows the selected image or a placeholder. Tapping it opens the device's image gallery.
-    -   Text fields for Name, Color, and Age.
-    -   A multi-line text field for Description.
-    -   A `DropdownButtonFormField` to select the pet's Breed from a list fetched from the API.
-    -   A large submit button ("Add Pet" or "Save Changes") at the bottom.
+```mermaid
+graph TD
+    subgraph "Pet Details Modal"
+        A[ModalBottomSheet] --> B[Column]
+        B --> C((Pet Image))
+        B --> D[Text: Pet Name]
+        B --> E[Text: Breed Name]
+        B --> F[Row: Info Chips]
+        F --> G1([Chip: Age])
+        F --> G2([Chip: Color])
+        B --> H[Divider]
+        B --> I[Text: About]
+        B --> J[Text: Description]
+        B --> K[Employee Actions (Conditional)]
+        
+        subgraph "Actions"
+            K --> L([Button: Edit])
+            K --> M([Button: Remove])
+        end
+    end
+```
+**Description:** A modal sheet that slides up, showing pet details. The "Edit" and "Remove" action buttons are only visible to "Employee" users.
 
-### 4. Login / Register Pages
--   **Layout:** A simple full-screen `Scaffold` with a back arrow.
--   **AppBar:** Title is "Login" or "Register".
--   **Body:** A `Form` with text fields for user details (Name, Surname, Age, Email, Password, Confirm Password).
--   **Action:** A single "Login" or "Register" button to submit the form.
+### 3. Add / Edit Pet Page
 
-### 5. App Drawer (Menu)
--   **Layout:** A standard `Drawer` that slides out from the left.
--   **Header:** An `AppBar` with the title "Menu".
--   **Content (Logged Out):** List tiles for "Login" and "Register".
--   **Content (Logged In):** A single list tile for "Logout".
--   **Footer:** A `SwitchListTile` with the label "Dark Mode" and a toggle switch to control the application's theme.
+```mermaid
+graph TD
+    subgraph "Add/Edit Pet Page"
+        A[Scaffold] --> B[AppBar: "Add/Edit Pet"]
+        A --> C[Form]
+        C --> D[Column]
+        D --> E((Image Picker Container))
+        D --> F[TextField: Name]
+        D --> G[TextField: Color]
+        D --> H[TextField: Age]
+        D --> I[TextField: Description]
+        D --> J[Dropdown: Breed]
+        D --> K([Button: "Add Pet" / "Save Changes"])
+    end
+```
+**Description:** A full-screen form. The `Image Picker Container` allows selecting an image from the gallery. The "Breed" field is a dropdown populated from the API.
+
+### 4. App Drawer (Menu)
+
+```mermaid
+graph TD
+    subgraph "App Drawer"
+        A[Drawer] --> B[AppBar: "Menu"]
+        A --> C{Logged In?}
+        
+        subgraph "Logged Out State"
+            C -- No --> D([ListTile: Login])
+            C -- No --> E([ListTile: Register])
+        end
+
+        subgraph "Logged In State"
+            C -- Yes --> F([ListTile: Logout])
+        end
+
+        A --> G[Divider]
+        A --> H[SwitchListTile: "Dark Mode"]
+    end
+```
+**Description:** A side menu with authentication options that change based on the user's login state, and a persistent toggle for light/dark mode.
 
 ---
 
