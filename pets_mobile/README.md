@@ -113,34 +113,7 @@ graph TD
 ```
 
 ## UI Wireframes
-
-This section provides structural wireframes using Mermaid diagrams to visualize the layout and widget hierarchy of each screen.
-
-**Legend:**
--   **`[Rectangle]`**: Standard container or widget.
--   **`(Rounded)`**: Interactive list or card.
--   **`([Stadium])`**: Button or clickable action.
--   **`((Circle))`**: Image or avatar.
-
-### 1. Home Page
-
-
-**Description:** A screen with an `AppBar` and a scrollable `ListView` of `PetCard` widgets. The `FloatingActionButton` for adding a pet is only visible to "Employee" users.
-
-### 2. Pet Details Modal
-
-
-**Description:** A modal sheet that slides up, showing pet details. The "Edit" and "Remove" action buttons are only visible to "Employee" users.
-
-### 3. Add / Edit Pet Page
-
-
-**Description:** A full-screen form. The `Image Picker Container` allows selecting an image from the gallery. The "Breed" field is a dropdown populated from the API.
-
-### 4. App Drawer (Menu)
-
-
-**Description:** A side menu with authentication options that change based on the user's login state, and a persistent toggle for light/dark mode
+<img width="2360" height="1636" alt="image" src="https://github.com/user-attachments/assets/58faa344-dcd9-47a2-a86e-6387a9472629" />
 
 ## Setup & Running the Application
 
