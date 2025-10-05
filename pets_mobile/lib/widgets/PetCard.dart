@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../api/models/pet.dart';
+import 'package:pets_mobile/api/models/pet.dart';
 
 class PetCard extends StatelessWidget {
   final Pet pet;
@@ -45,10 +45,10 @@ class PetCard extends StatelessWidget {
               errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
                 return Container(
                   height: 200,
-                  color: Colors.grey[200],
+                  color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
                   child: Icon(
                     Icons.pets,
-                    color: Colors.grey[400],
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
                     size: 48,
                   ),
                 );
@@ -69,7 +69,7 @@ class PetCard extends StatelessWidget {
                   Text(
                     '${pet.breedName} • ${pet.age} years old',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.black54,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pets_mobile/api/authService.dart';
+import 'package:pets_mobile/api/themeProvider.dart';
 import 'package:pets_mobile/widgets/LoginPage.dart';
 import 'package:pets_mobile/widgets/RegisterPage.dart';
 
@@ -9,6 +10,8 @@ class AppDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Drawer(
       child: Column(
         children: <Widget>[
@@ -47,6 +50,14 @@ class AppDrawer extends StatelessWidget {
                   ],
                 );
               }
+            },
+          ),
+          const Divider(),
+          SwitchListTile(
+            title: const Text('Dark Mode'),
+            value: themeProvider.isDarkMode(context),
+            onChanged: (value) {
+              themeProvider.toggleTheme(value);
             },
           ),
         ],

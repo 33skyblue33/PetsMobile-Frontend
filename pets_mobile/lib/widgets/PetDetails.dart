@@ -8,7 +8,7 @@ class PetDetails extends StatelessWidget {
   final Pet pet;
   final User? user;
   final String token;
-  final VoidCallback onDataChanged; 
+  final VoidCallback onDataChanged;
 
   const PetDetails({
     Key? key,
@@ -30,9 +30,9 @@ class PetDetails extends StatelessWidget {
             child: const Text('Yes'),
             onPressed: () async {
               try {
-                Navigator.of(ctx).pop(); 
+                Navigator.of(ctx).pop();
                 await deletePet(pet.id, token);
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
                 onDataChanged();
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Pet removed successfully!'), backgroundColor: Colors.green));
               } catch (e) {
@@ -67,7 +67,7 @@ class PetDetails extends StatelessWidget {
             width: 40,
             margin: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.grey[300],
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -80,8 +80,8 @@ class PetDetails extends StatelessWidget {
               fit: BoxFit.cover,
               errorBuilder: (ctx, err, st) => Container(
                 height: 250,
-                color: Colors.grey[200],
-                child: Icon(Icons.pets, color: Colors.grey[400], size: 48),
+                color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+                child: Icon(Icons.pets, color: Theme.of(context).colorScheme.onSurfaceVariant, size: 48),
               ),
             ),
           ),
@@ -97,15 +97,17 @@ class PetDetails extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   pet.breedName,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Colors.black54),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 Wrap(
                   spacing: 8.0,
                   runSpacing: 4.0,
                   children: [
-                    _buildInfoChip(Icons.cake_outlined, '${pet.age} years old', context),
-                    _buildInfoChip(Icons.color_lens_outlined, pet.color, context),
+                    _buildInfoChip(context, Icons.cake_outlined, '${pet.age} years old'),
+                    _buildInfoChip(context, Icons.color_lens_outlined, pet.color),
                   ],
                 ),
                 const Divider(height: 40),
@@ -120,10 +122,11 @@ class PetDetails extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   pet.breedDescription,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[700]),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 32),
-
                 if (user?.role == 'Employee')
                   _buildEmployeeActions(context),
               ],
@@ -176,7 +179,7 @@ class PetDetails extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoChip(IconData icon, String text, BuildContext context) {
+  Widget _buildInfoChip(BuildContext context, IconData icon, String text) {
     return Chip(
       avatar: Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
       label: Text(text),

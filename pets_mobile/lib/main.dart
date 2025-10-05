@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pets_mobile/api/authService.dart';
 import 'package:pets_mobile/api/breedProvider.dart';
+import 'package:pets_mobile/api/themeProvider.dart';
 import 'package:pets_mobile/api/models/pet.dart';
 import 'package:pets_mobile/api/petService.dart';
 import 'package:pets_mobile/widgets/PetCard.dart';
@@ -15,6 +16,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => BreedProvider()),
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
       child: const App(),
     ),
@@ -26,10 +28,21 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return MaterialApp(
       title: 'Pets Mobile',
+      themeMode: themeProvider.themeMode,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepPurple,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       home: Consumer<AuthService>(
