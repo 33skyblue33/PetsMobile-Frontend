@@ -54,27 +54,31 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Register')),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                TextFormField(decoration: const InputDecoration(labelText: 'Name'), validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['name'] = v!),
-                const SizedBox(height: 12),
-                TextFormField(decoration: const InputDecoration(labelText: 'Surname'), validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['surname'] = v!),
-                const SizedBox(height: 12),
-                TextFormField(decoration: const InputDecoration(labelText: 'Age'), keyboardType: TextInputType.number, validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['age'] = v!),
-                const SizedBox(height: 12),
-                TextFormField(decoration: const InputDecoration(labelText: 'Email'), keyboardType: TextInputType.emailAddress, validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['email'] = v!),
-                const SizedBox(height: 12),
-                TextFormField(decoration: const InputDecoration(labelText: 'Password'), controller: _passwordController, obscureText: true, validator: (v) => v!.length < 6 ? 'Min 6 characters' : null, onSaved: (v) => _formData['password'] = v!),
-                const SizedBox(height: 12),
-                TextFormField(decoration: const InputDecoration(labelText: 'Confirm Password'), obscureText: true, validator: (v) => v != _passwordController.text ? 'Passwords do not match' : null),
-                const SizedBox(height: 20),
-                if (_isLoading) const CircularProgressIndicator() else ElevatedButton(onPressed: _submit, child: const Text('Register')),
-              ],
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextFormField(decoration: const InputDecoration(labelText: 'Name'), validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['name'] = v!),
+                  const SizedBox(height: 12),
+                  TextFormField(decoration: const InputDecoration(labelText: 'Surname'), validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['surname'] = v!),
+                  const SizedBox(height: 12),
+                  TextFormField(decoration: const InputDecoration(labelText: 'Age'), keyboardType: TextInputType.number, validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['age'] = v!),
+                  const SizedBox(height: 12),
+                  TextFormField(decoration: const InputDecoration(labelText: 'Email'), keyboardType: TextInputType.emailAddress, validator: (v) => v!.isEmpty ? 'Required' : null, onSaved: (v) => _formData['email'] = v!),
+                  const SizedBox(height: 12),
+                  TextFormField(decoration: const InputDecoration(labelText: 'Password'), controller: _passwordController, obscureText: true, validator: (v) => v!.length < 6 ? 'Min 6 characters' : null, onSaved: (v) => _formData['password'] = v!),
+                  const SizedBox(height: 12),
+                  TextFormField(decoration: const InputDecoration(labelText: 'Confirm Password'), obscureText: true, validator: (v) => v != _passwordController.text ? 'Passwords do not match' : null),
+                  const SizedBox(height: 20),
+                  if (_isLoading) const CircularProgressIndicator() else ElevatedButton(onPressed: _submit, child: const Text('Register')),
+                ],
+              ),
             ),
           ),
         ),

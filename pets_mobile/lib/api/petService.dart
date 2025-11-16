@@ -4,6 +4,9 @@ import 'package:http/http.dart' as http;
 import 'apiConfig.dart';
 import 'models/pet.dart';
 import 'models/petRequest.dart';
+import 'models/pagedResult.dart';
+import 'models/rating.dart';
+import 'models/ratingRequest.dart';
 
 Future<List<Pet>> fetchPets() async {
   final uri = Uri.parse('${ApiConfig.baseUrl}/Pets');
@@ -68,5 +71,54 @@ Future<void> deletePet(int petId, String accessToken) async {
 
   if (response.statusCode != 204) {
     throw Exception('Failed to delete pet. Status: ${response.statusCode}');
+  }
+}
+
+Future<PagedResult<Rating>> fetchPetRatings({
+  required int petId,
+  int? pointer, 
+  int pageSize = 10,
+}) async {
+  final queryParameters = <String, String>{
+    'pageSize': pageSize.toString(),
+  };
+  if (pointer != null) {
+    queryParameters['pointer'] = pointer.toString();
+  }
+
+  final uri = Uri.parse('${ApiConfig.baseUrl}/Pets/$petId/Ratings')
+      .replace(queryParameters: queryParameters);
+      
+  final response = await http.get(uri);
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    return PagedResult.fromJson(json, Rating.fromJson);
+  } else {
+    throw Exception('Failed to load ratings for pet $petId');
+  }
+}
+
+Future<Rating> addRatingForPet({
+  required int petId,
+  required RatingRequest ratingRequest,
+  required String accessToken,
+}) async {
+  final uri = Uri.parse('${ApiConfig.baseUrl}/Pets/$petId/Ratings');
+
+  final response = await http.post(
+    uri,
+    headers: {
+      'Authorization': 'Bearer $accessToken',
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(ratingRequest.toJson()),
+  );
+
+  if (response.statusCode == 201) {
+    final Map<String, dynamic> json = jsonDecode(response.body);
+    return Rating.fromJson(json);
+  } else {
+    throw Exception('Failed to add rating. Status: ${response.statusCode}');
   }
 }
